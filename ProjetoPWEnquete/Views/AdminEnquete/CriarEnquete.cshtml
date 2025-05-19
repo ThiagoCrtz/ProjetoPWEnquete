@@ -1,0 +1,77 @@
+﻿
+@using ProjetoPWEnquete.ViewsModels
+@model AddEnqueteModel
+
+@{
+    ViewData["Title"] = "Criar Enquete";
+    Layout = "~/Views/Shared/_EnqueteLayout.cshtml";
+}
+
+<div class="enquete-container">
+    <div class="enquete-box">
+        <h2 class="mb-4 text-center">Criar Enquete</h2>
+
+        <form asp-action="CriarEnquete" method="post" novalidate>
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control mb-2" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+
+            <label asp-for="Description" class="form-label mt-3"></label>
+            <textarea asp-for="Description" class="form-control mb-2"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+
+            <label asp-for="ExpirationDate" class="form-label mt-3"></label>
+            <input asp-for="ExpirationDate" type="date" class="form-control mb-2" />
+            <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+
+            <label class="form-label mt-4">Opções</label>
+
+            <input asp-for="Option1" class="form-control option-input mb-2" placeholder="Opção 1" />
+            <input asp-for="Option2" class="form-control option-input mb-2" placeholder="Opção 2" style="display:none" />
+            <input asp-for="Option3" class="form-control option-input mb-2" placeholder="Opção 3" style="display:none" />
+            <input asp-for="Option4" class="form-control option-input mb-2" placeholder="Opção 4" style="display:none" />
+            <input asp-for="Option5" class="form-control option-input mb-2" placeholder="Opção 5" style="display:none" />
+            <input asp-for="Option6" class="form-control option-input mb-2" placeholder="Opção 6" style="display:none" />
+            <input asp-for="Option7" class="form-control option-input mb-2" placeholder="Opção 7" style="display:none" />
+            <input asp-for="Option8" class="form-control option-input mb-2" placeholder="Opção 8" style="display:none" />
+            <input asp-for="Option9" class="form-control option-input mb-2" placeholder="Opção 9" style="display:none" />
+            <input asp-for="Option10" class="form-control option-input mb-2" placeholder="Opção 10" style="display:none" />
+
+            <input type="submit" value="Criar Enquete" class="btn btn-success w-100 p-2" />
+        </form>
+
+        @section Scripts {
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const options = document.querySelectorAll(".option-input");
+
+                    options.forEach((input, index) => {
+                        // Se algum input já estiver preenchido, mostra os próximos até esse ponto
+                        if (input.value.trim() !== "") {
+                            for (let i = 0; i <= index + 1 && i < options.length; i++) {
+                                options[i].style.display = "block";
+                            }
+                        }
+
+                        input.addEventListener("input", () => {
+                            if (input.value.trim() !== "") {
+                                if (index + 1 < options.length) {
+                                    options[index + 1].style.display = "block";
+                                }
+                            } else {
+                                // Esconder e limpar inputs após o atual se vazio
+                                for (let i = index + 1; i < options.length; i++) {
+                                    options[i].style.display = "none";
+                                    options[i].value = "";
+                                }
+                            }
+                        });
+                    });
+
+                    // Se nenhum input estiver preenchido, mostra o primeiro
+                    if (!Array.from(options).some(i => i.value.trim() !== "")) {
+                        options[0].style.display = "block";
+                    }
+                });
+            </script>
+        }

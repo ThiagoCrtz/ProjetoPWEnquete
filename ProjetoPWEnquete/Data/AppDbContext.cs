@@ -9,5 +9,7 @@ namespace UserRoles.Data
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }
+        public DbSet<Enquete> Enquetes { get; set; }
+
     }
 }

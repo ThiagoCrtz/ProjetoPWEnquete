@@ -1,0 +1,79 @@
+﻿.enquete-container {
+    display: flex;
+    justify-content: center; /* centraliza horizontal */
+    align-items: center; /* centraliza vertical */
+    min-height: 100vh; /* altura da tela toda */
+    padding: 2rem 1rem;
+    background-image: url('../Images/enquete-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: repeat-y;
+    backdrop-filter: blur(4px);
+    width: 100vw; /* largura total da viewport */
+    box-sizing: border-box;
+}
+
+.enquete-box {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    width: 800px; /* largura fixa */
+    max-width: 95vw; /* responsivo para telas menores */
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .enquete-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    }
+    .enquete-box label {
+        font-weight: 600;
+        margin-top: 15px;
+        display: block;
+    }
+
+    .enquete-box input[type="text"],
+    .enquete-box input[type="date"],
+    .enquete-box textarea {
+        width: 100%;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        transition: border-color 0.3s ease;
+    }
+
+        .enquete-box input[type="text"]:focus,
+        .enquete-box input[type="date"]:focus,
+        .enquete-box textarea:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+
+    .enquete-box button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        background-color: #1d4ed8;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .enquete-box button:hover {
+            background-color: #2563eb;
+        }
+
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: -8px;
+    margin-bottom: 8px;
+    display: block;
+}

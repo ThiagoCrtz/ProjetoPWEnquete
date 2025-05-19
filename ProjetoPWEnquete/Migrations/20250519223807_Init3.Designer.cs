@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserRoles.Data;
 
@@ -11,9 +12,11 @@ using UserRoles.Data;
 namespace ProjetoPWEnquete.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519223807_Init3")]
+    partial class Init3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,63 +156,6 @@ namespace ProjetoPWEnquete.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("ProjetoPWEnquete.Models.Enquete", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Option1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option10")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option5")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option6")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option7")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option8")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option9")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("descrição")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Enquetes");
                 });
 
             modelBuilder.Entity("ProjetoPWEnquete.Models.User", b =>

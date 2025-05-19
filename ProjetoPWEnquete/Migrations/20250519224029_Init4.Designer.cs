@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserRoles.Data;
 
@@ -11,9 +12,11 @@ using UserRoles.Data;
 namespace ProjetoPWEnquete.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250519224029_Init4")]
+    partial class Init4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,36 +172,6 @@ namespace ProjetoPWEnquete.Migrations
                     b.Property<DateTime>("ExpiresAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Option1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option10")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option5")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option6")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option7")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option8")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Option9")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -210,6 +183,31 @@ namespace ProjetoPWEnquete.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Enquetes");
+                });
+
+            modelBuilder.Entity("ProjetoPWEnquete.Models.OpEnquetes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("OptionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PollId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("enqueteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("enqueteId");
+
+                    b.ToTable("OpEnquetes");
                 });
 
             modelBuilder.Entity("ProjetoPWEnquete.Models.User", b =>
@@ -281,6 +279,33 @@ namespace ProjetoPWEnquete.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ProjetoPWEnquete.Models.Votos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("openquetesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("openqutesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("openquetesId");
+
+                    b.ToTable("Votos");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -330,6 +355,46 @@ namespace ProjetoPWEnquete.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjetoPWEnquete.Models.OpEnquetes", b =>
+                {
+                    b.HasOne("ProjetoPWEnquete.Models.Enquete", "enquete")
+                        .WithMany("EOptions")
+                        .HasForeignKey("enqueteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("enquete");
+                });
+
+            modelBuilder.Entity("ProjetoPWEnquete.Models.Votos", b =>
+                {
+                    b.HasOne("ProjetoPWEnquete.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjetoPWEnquete.Models.OpEnquetes", "openquetes")
+                        .WithMany("votos")
+                        .HasForeignKey("openquetesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("openquetes");
+                });
+
+            modelBuilder.Entity("ProjetoPWEnquete.Models.Enquete", b =>
+                {
+                    b.Navigation("EOptions");
+                });
+
+            modelBuilder.Entity("ProjetoPWEnquete.Models.OpEnquetes", b =>
+                {
+                    b.Navigation("votos");
                 });
 #pragma warning restore 612, 618
         }
