@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using ProjetoPWEnquete.Models;
@@ -10,20 +11,21 @@ namespace ProjetoPWEnquete.Controllers
     public class AdminEnquete : Controller
     {
         private readonly AppDbContext _context;
-
         public AdminEnquete(AppDbContext context)
         {
             _context = context;
         }
-
         [HttpGet]
-        public IActionResult CriarEnquete( )
+        [Authorize(Roles = "Admin")]
+        public IActionResult CriarEnquete()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> CriarEnquete(AddEnqueteModel model)
         {
             if (!ModelState.IsValid)
@@ -56,6 +58,6 @@ namespace ProjetoPWEnquete.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
+     
     }
 }

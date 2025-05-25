@@ -5,7 +5,7 @@ namespace ProjetoPWEnquete.Models
 {
     public class User : IdentityUser
     {
-        public string FullName;
+        public string FullName ;
 
         public string Cpf { get; set; }
     }

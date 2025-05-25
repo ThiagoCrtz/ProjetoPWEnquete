@@ -1,0 +1,79 @@
+﻿@model ProjetoPWEnquete.ViewsModels.ResultadoGraficoViewModel
+
+@{
+    ViewData["Title"] = "Gráfico da Enquete";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .grafico-wrapper {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    #graficoEnquete {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .btn-voltar-vibrante {
+        display: block;
+        margin: 40px auto 0;
+        padding: 12px 28px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #0d6efd, #6610f2);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        text-decoration: none;
+    }
+
+        .btn-voltar-vibrante:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #0b5ed7, #520dc2);
+            color: #fff;
+            text-decoration: none;
+        }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">@Model.TituloEnquete</h2>
+    <div class="grafico-wrapper">
+        <canvas id="graficoEnquete"></canvas>
+    </div>
+
+    <a asp-controller="Enquete" asp-action="ListarEnquetes" class="btn-voltar-vibrante">Voltar para Enquetes</a>
+</div>
+
+<script>
+    const ctx = document.getElementById('graficoEnquete').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.Labels)),
+            datasets: [{
+                label: 'Votos',
+                data: @Html.Raw(Json.Serialize(Model.Votos)),
+                backgroundColor: [
+                    '#0d6efd', '#198754', '#dc3545', '#ffc107', '#6610f2',
+                    '#20c997', '#fd7e14', '#6c757d', '#e83e8c', '#0dcaf0'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>

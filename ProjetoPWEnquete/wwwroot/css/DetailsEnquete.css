@@ -1,0 +1,129 @@
+﻿.details-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+    width: 100%; /* Use 100% para evitar overflow causado pela scrollbar */
+    overflow-x: hidden; /* Para garantir que não crie scroll horizontal */
+}
+
+.details-box {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    width: 700px; /* ajuste para o tamanho que quiser */
+    max-width: 95vw; /* responsivo para telas menores */
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .details-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Ajustes para o conteúdo interno */
+    .details-box h2 {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .details-box p {
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+    }
+
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.btn, .option-btn {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Opção normal */
+.option-btn {
+    border: 1.5px solid #2563eb;
+    background-color: white;
+    color: #2563eb;
+    box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+}
+
+    .option-btn:hover {
+        background-color: #2563eb;
+        color: white;
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.7);
+        border-color: #1d4ed8;
+    }
+
+    .option-btn.selected {
+        background-color: #2563eb;
+        color: white;
+        border-color: #1d4ed8;
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.9);
+    }
+.btn-group {
+    display: flex;
+    justify-content: center; /* Centraliza os botões */
+    gap: 20px; /* Espaçamento entre os botões */
+    margin-top: 25px;
+    flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+}
+
+.btn {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    max-width: 200px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+.btn-success {
+    background-color: #16a34a;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.btn-info {
+    background-color: #2563eb;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #15803d;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+.btn-info:hover {
+    background-color: #1e40af;
+}

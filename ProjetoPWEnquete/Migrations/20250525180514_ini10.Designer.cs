@@ -12,8 +12,8 @@ using UserRoles.Data;
 namespace ProjetoPWEnquete.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250518233908_init")]
-    partial class init
+    [Migration("20250525180514_ini10")]
+    partial class ini10
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -158,6 +158,63 @@ namespace ProjetoPWEnquete.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ProjetoPWEnquete.Models.Enquete", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Option1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option10")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option3")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option4")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option5")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option6")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option7")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option8")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Option9")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("descrição")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Enquetes");
+                });
+
             modelBuilder.Entity("ProjetoPWEnquete.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -168,6 +225,10 @@ namespace ProjetoPWEnquete.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -223,6 +284,31 @@ namespace ProjetoPWEnquete.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Voto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EnqueteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OpcaoEscolhida")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnqueteId");
+
+                    b.ToTable("Votos");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -272,6 +358,17 @@ namespace ProjetoPWEnquete.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Voto", b =>
+                {
+                    b.HasOne("ProjetoPWEnquete.Models.Enquete", "Enquete")
+                        .WithMany()
+                        .HasForeignKey("EnqueteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enquete");
                 });
 #pragma warning restore 612, 618
         }

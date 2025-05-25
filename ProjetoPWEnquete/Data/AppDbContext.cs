@@ -10,6 +10,7 @@ namespace UserRoles.Data
         {
         }
         public DbSet<Enquete> Enquetes { get; set; }
+        public DbSet<Voto> Votos { get; set; }
 
     }
 }
