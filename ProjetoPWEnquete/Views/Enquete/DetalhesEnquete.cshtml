@@ -1,28 +1,48 @@
 ﻿@model ProjetoPWEnquete.Models.Enquete
-
 @{
     ViewData["Title"] = "Detalhes da Enquete";
 }
 
-<link rel="stylesheet" href="~/css/DetailsEnquete.css" />
+<head>
+    <link rel="stylesheet" href="~/css/DetailsEnquete.css" asp-append-version="true" />
+</head>
+
 
 <div class="details-container">
     <section class="details-box" aria-label="Detalhes da enquete">
         <h2>@Model.Question</h2>
-        <p><strong>Descrição:</strong> @Model.descrição</p>
-        <p><strong>Expira em:</strong> @Model.ExpiresAt.ToString("dd/MM/yyyy")</p>
 
-        <h4>Escolha sua opção:</h4>
+        <div class="enquete-info">
+            <div class="info-card">
+                <div class="info-card-label">
+                    <i class="bi bi-file-text"></i>
+                    Descrição
+                </div>
+                <div class="info-card-value">@Model.descrição</div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-label">
+                    <i class="bi bi-calendar-event"></i>
+                    Expira em
+                </div>
+                <div class="info-card-value">@Model.ExpiresAt.ToString("dd/MM/yyyy")</div>
+            </div>
+        </div>
+
+        <h4 class="section-title">Escolha sua opção</h4>
+
         <div class="options-container" role="list">
             @for (int i = 1; i <= 10; i++)
             {
                 var optionText = (string)typeof(ProjetoPWEnquete.Models.Enquete)
                 .GetProperty($"Option{i}")
                 ?.GetValue(Model);
-
                 if (!string.IsNullOrEmpty(optionText))
                 {
-                    <button type="button" class="option-btn" data-value="@i" role="listitem">@optionText</button>
+                    <button type="button" class="option-btn" data-value="@i" role="listitem">
+                        <span>@optionText</span>
+                    </button>
                 }
             }
         </div>
@@ -32,31 +52,44 @@
             <input type="hidden" name="EnqueteId" value="@Model.Id" />
             <input type="hidden" name="OpcaoSelecionada" id="OpcaoSelecionada" />
 
-            <div class="btn-group mt-3">
-                <button type="submit" id="btnVotar" class="btn btn-success" disabled>Votar</button>
-                <a asp-controller="Enquete" asp-action="Grafico" asp-route-enqueteId="@Model.Id" class="btn btn-info">Ver Gráfico</a>
-                <a asp-controller="Enquete" asp-action="ListarEnquetes" class="btn btn-secondary">Cancelar</a>
+            <div class="btn-group">
+                <button type="submit" id="btnVotar" class="btn btn-success" disabled>
+                    <i class="bi bi-check-circle"></i>
+                    <span>Confirmar Voto</span>
+                </button>
+                <a asp-controller="Enquete" asp-action="Grafico" asp-route-enqueteId="@Model.Id" class="btn btn-info">
+                    <i class="bi bi-graph-up"></i>
+                    <span>Ver Resultados</span>
+                </a>
+                <a asp-controller="Enquete" asp-action="ListarEnquetes" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                    <span>Voltar</span>
+                </a>
             </div>
         </form>
     </section>
 </div>
+
 <!-- Modal de Resposta -->
 <div class="modal fade" id="modalVoto" tabindex="-1" aria-labelledby="modalVotoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalVotoLabel">Resultado da Votação</h5>
+                <h5 class="modal-title" id="modalVotoLabel">Voto Confirmado</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
             <div class="modal-body" id="modalVotoBody">
                 <!-- Conteúdo da resposta será inserido aqui -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-info" data-bs-dismiss="modal">
+                    <span>Fechar</span>
+                </button>
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
         const buttons = document.querySelectorAll('.option-btn');
@@ -65,9 +98,14 @@
 
         buttons.forEach(btn => {
             btn.addEventListener('click', () => {
+                // Remove seleção anterior
                 buttons.forEach(b => b.classList.remove('selected'));
+
+                // Adiciona seleção atual
                 btn.classList.add('selected');
                 selectedOption = btn.getAttribute('data-value');
+
+                // Habilita botão de votar
                 btnVotar.disabled = false;
                 btnVotar.setAttribute('aria-disabled', 'false');
             });
@@ -76,27 +114,41 @@
         btnVotar.addEventListener('click', async function (e) {
             e.preventDefault();
 
+            if (!selectedOption) {
+                alert('Por favor, selecione uma opção antes de votar.');
+                return;
+            }
+
             const enqueteId = @Model.Id;
             const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-            const resposta = await fetch('/Enquete/Votar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': token
-                },
-                body: JSON.stringify({
-                    EnqueteId: enqueteId,
-                    OpcaoEscolhida: selectedOption
-                })
-            });
+            try {
+                const resposta = await fetch('/Enquete/Votar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        EnqueteId: enqueteId,
+                        OpcaoEscolhida: selectedOption
+                    })
+                });
 
-            const resultado = await resposta.text();
-            document.getElementById('modalVotoBody').innerText = resultado;
+                const resultado = await resposta.text();
+                document.getElementById('modalVotoBody').innerText = resultado;
 
-            // Exibe o modal
-            const modal = new bootstrap.Modal(document.getElementById('modalVoto'));
-            modal.show();
+                // Exibe o modal
+                const modal = new bootstrap.Modal(document.getElementById('modalVoto'));
+                modal.show();
+
+                // Desabilita os botões após votar
+                buttons.forEach(btn => btn.disabled = true);
+                btnVotar.disabled = true;
+            } catch (error) {
+                console.error('Erro ao enviar voto:', error);
+                alert('Ocorreu um erro ao processar seu voto. Tente novamente.');
+            }
         });
     </script>
 }

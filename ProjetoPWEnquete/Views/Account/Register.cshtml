@@ -1,54 +1,89 @@
 ﻿@using ProjetoPWEnquete.ViewsModels
 @model RegisterViewModel
-
 @{
-	ViewData["Tittle"] = "Register";
-	Layout = "~/Views/Shared/_AccountLayout.cshtml";
-}
-
-
-@{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Cadastro";
     Layout = "~/Views/Shared/_AccountLayout.cshtml";
 }
+    <head>
+        <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
+
+    </head>
 
 <div class="account-container">
     <div class="account-box">
-        <h2 class="text-center mb-4">Register</h2>
+        <h2>Cadastro</h2>
+        <p class="subtitle">Crie sua conta e comece a participar</p>
+
         <form asp-action="Register" method="post">
             @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
             <div class="mb-3">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <label asp-for="Name" class="form-label">
+                    <i class="bi bi-person"></i>
+                    Nome Completo
+                </label>
+                <input asp-for="Name" class="form-control" placeholder="João da Silva" type="text">
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+
+            <div class="form-row">
+                <div>
+                    <label asp-for="Email" class="form-label">
+                        <i class="bi bi-envelope"></i>
+                        Email
+                    </label>
+                    <input asp-for="Email" class="form-control" placeholder="seu@email.com" type="email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Cpf" class="form-label">
+                        <i class="bi bi-card-text"></i>
+                        CPF
+                    </label>
+                    <input asp-for="Cpf" class="form-control" placeholder="000.000.000-00" type="text">
+                    <span asp-validation-for="Cpf" class="text-danger"></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="Cpf" class="form-label"></label>
-                <input asp-for="Cpf" class="form-control" />
-                <span asp-validation-for="Cpf" class="text-danger"></span>
+
+            <div class="form-row">
+                <div>
+                    <label asp-for="Password" class="form-label">
+                        <i class="bi bi-lock"></i>
+                        Senha
+                    </label>
+                    <input asp-for="Password" class="form-control" placeholder="••••••••" type="password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <label asp-for="ConfirmPassowrd" class="form-label">
+                        <i class="bi bi-lock-fill"></i>
+                        Confirmar Senha
+                    </label>
+                    <input asp-for="ConfirmPassowrd" class="form-control" placeholder="••••••••" type="password">
+                    <span asp-validation-for="ConfirmPassowrd" class="text-danger"></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="ConfirmPassowrd" class="form-label"></label>
-                <input asp-for="ConfirmPassowrd" class="form-control" />
-                <span asp-validation-for="ConfirmPassowrd" class="text-danger"></span>
-            </div>
-            <input type="submit" value="Register" class="btn btn-success w-100 p-2" />
-            <p class="text-center mt-2">
-                Already have an account? <a asp-controller="Account" asp-action="Login" class="text-decoration-none">Login</a>
-            </p>
-            <div class="text-center">
-                <a asp-controller="Home" asp-action="Index" class="text-decoration-none mt-3">Back</a>
+
+            <button type="submit" class="btn btn-register">
+                <span>Criar conta</span>
+            </button>
+
+            <div class="account-links">
+                <p>
+                    Já tem uma conta?
+                    <a asp-controller="Account" asp-action="Login">
+                        Fazer login
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </p>
+
+                <a asp-controller="Home" asp-action="Index" class="back-link">
+                    Voltar para início
+                </a>
             </div>
         </form>
     </div>

@@ -1,16 +1,29 @@
 ﻿@model IEnumerable<ProjetoPWEnquete.Models.Enquete>
-
-
-
 @{
     ViewData["Title"] = "Lista de Enquetes";
 }
+<head>
+    <link rel="stylesheet" href="~/css/listarenquete.css" asp-append-version="true" />
 
-<h2>@ViewData["Title"]</h2>
+</head>
+
+<div class="page-header">
+    <h2>
+        <i class="bi bi-clipboard-check" style="color: var(--accent);"></i>
+        @ViewData["Title"]
+    </h2>
+    <p>Escolha uma enquete e compartilhe sua opinião</p>
+</div>
 
 @if (!Model.Any())
 {
-    <p>No polls available right now.</p>
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h3>Nenhuma enquete disponível</h3>
+        <p>Não há enquetes ativas no momento. Volte mais tarde!</p>
+    </div>
 }
 else
 {
@@ -18,29 +31,50 @@ else
         <div class="row">
             @foreach (var enquete in Model)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
+                var options = new string[] {
+        enquete.Option1,
+        enquete.Option2,
+        enquete.Option3,
+        enquete.Option4,
+        enquete.Option5,
+        enquete.Option6,
+        enquete.Option7,
+        enquete.Option8,
+        enquete.Option9,
+        enquete.Option10
+        }.Where(o => !string.IsNullOrWhiteSpace(o)).ToList();
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card enquete-card h-100">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">@enquete.Question</h5>
-                            <ul class="list-group list-group-flush mb-3">
-                                @foreach (var option in new string[] {
-                        enquete.Option1,
-                        enquete.Option2,
-                        enquete.Option3,
-                        enquete.Option4,
-                        enquete.Option5,
-                        enquete.Option6,
-                        enquete.Option7,
-                        enquete.Option8,
-                        enquete.Option9,
-                        enquete.Option10
-                                    }.Where(o => !string.IsNullOrWhiteSpace(o)))
-                                {
-                                    <li class="list-group-item">@option</li>
-                                }
-                            </ul>
-                            <a asp-controller="Enquete" asp-action="DetalhesEnquete" asp-route-id="@enquete.Id" class="btn btn-primary mt-auto">
-                                View Details
+
+                            <div class="options-count">
+                                <i class="bi bi-list-ul"></i>
+                                <span>@options.Count opções disponíveis</span>
+                            </div>
+
+                            <div class="options-list mb-3">
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var option in options.Take(5))
+                                    {
+                                        <li class="list-group-item">@option</li>
+                                    }
+                                    @if (options.Count > 5)
+                                    {
+                                        <li class="list-group-item" style="color: var(--accent); font-style: italic;">
+                                            + @(options.Count - 5) mais opções...
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <a asp-controller="Enquete" asp-action="DetalhesEnquete" asp-route-id="@enquete.Id"
+                               class="btn btn-view-details mt-auto">
+                                <span>
+                                    Ver Detalhes
+                                    <i class="bi bi-arrow-right"></i>
+                                </span>
                             </a>
                         </div>
                     </div>

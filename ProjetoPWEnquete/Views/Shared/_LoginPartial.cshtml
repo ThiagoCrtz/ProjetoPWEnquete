@@ -1,29 +1,48 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @inject SignInManager<User> SignInManager;
-
-
+@inject UserManager<User> UserManager;
+<head>
+    <link rel="stylesheet" href="~/css/Loginpartial.css" asp-append-version="true" />
+</head>
 <ul class="navbar-nav ms-auto align-items-center">
-	@if (SignInManager.IsSignedIn(User))
-	{
-		<li class="nav-item">
-            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-link nav-link text-dark p-0">Logout</button>
-            </form>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+        var userName = user.FullName ?? User.Identity?.Name ?? "Usuário";
+        var userInitial = userName.Substring(0, 1).ToUpper();
+
+        <li class="nav-item dropdown">
+            <a class="nav-link user-dropdown-toggle dropdown-toggle" href="#" id="userDropdown" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="user-avatar">@userInitial</div>
+                <span class="user-name">@userName</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline w-100">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Sair
+                        </button>
+                    </form>
+                </li>
+            </ul>
         </li>
-	}
-	else{
-		<li class="nav-item">
-			<a class="nav-link text-dark" asp-controller="Account" asp-action="Login">
-				Login
-			</a>
-		</li>
-
-		<li class="nav-item">
-
-			<a class="nav-link text-dark" asp-controller="Account" asp-action="Register">
-				Register
-			</a>
-		</li>
-	}
+    }
+    else
+    {
+        <li class="nav-item">
+            <div class="auth-links">
+                <a class="btn-auth btn-login" asp-controller="Account" asp-action="Login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Login
+                </a>
+                <a class="btn-auth btn-register" asp-controller="Account" asp-action="Register">
+                    <i class="bi bi-person-plus"></i>
+                    Cadastrar
+                </a>
+            </div>
+        </li>
+    }
 </ul>

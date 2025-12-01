@@ -1,79 +1,150 @@
 ﻿@model ProjetoPWEnquete.ViewsModels.ResultadoGraficoViewModel
-
 @{
-    ViewData["Title"] = "Gráfico da Enquete";
+    ViewData["Title"] = "Resultados da Enquete";
 }
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-    .grafico-wrapper {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-    }
+<head>
+    <link rel="stylesheet" href="~/css/grafico.css" asp-append-version="true" />
+</head>
 
-    #graficoEnquete {
-        width: 100% !important;
-        height: auto !important;
-    }
-
-    .btn-voltar-vibrante {
-        display: block;
-        margin: 40px auto 0;
-        padding: 12px 28px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        background: linear-gradient(45deg, #0d6efd, #6610f2);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
-        text-decoration: none;
-    }
-
-        .btn-voltar-vibrante:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(45deg, #0b5ed7, #520dc2);
-            color: #fff;
-            text-decoration: none;
-        }
-</style>
-
-<div class="container mt-5">
-    <h2 class="text-center mb-4">@Model.TituloEnquete</h2>
-    <div class="grafico-wrapper">
-        <canvas id="graficoEnquete"></canvas>
+<div class="grafico-container">
+    <div class="header-section">
+        <h2>@Model.TituloEnquete</h2>
+        <p class="header-subtitle">
+            <i class="bi bi-bar-chart-fill"></i>
+            Resultados em tempo real
+        </p>
     </div>
 
-    <a asp-controller="Enquete" asp-action="ListarEnquetes" class="btn-voltar-vibrante">Voltar para Enquetes</a>
+    <div class="grafico-card">
+        <div class="grafico-wrapper">
+            <canvas id="graficoEnquete"></canvas>
+        </div>
+
+        <div class="legend-custom">
+            <div class="legend-title">Detalhamento dos Votos</div>
+            <div class="legend-items" id="legendItems"></div>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="stat-label">Total de Votos</div>
+            <div class="stat-value" id="totalVotos">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-trophy-fill"></i>
+            </div>
+            <div class="stat-label">Opção Mais Votada</div>
+            <div class="stat-value" id="maisVotada" style="font-size: 1.1rem;">-</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="bi bi-percent"></i>
+            </div>
+            <div class="stat-label">Maior Percentual</div>
+            <div class="stat-value" id="maiorPercentual">0%</div>
+        </div>
+    </div>
+
+    <div class="actions-section">
+        <a asp-controller="Enquete" asp-action="DetalhesEnquete" asp-route-id="@ViewContext.RouteData.Values["enqueteId"]" class="btn btn-primary">
+            <i class="bi bi-arrow-left-circle"></i>
+            <span>Voltar para Enquete</span>
+        </a>
+        <a asp-controller="Enquete" asp-action="ListarEnquetes" class="btn btn-secondary">
+            <i class="bi bi-list-ul"></i>
+            <span>Ver Todas Enquetes</span>
+        </a>
+    </div>
 </div>
 
 <script>
+    const labels = @Html.Raw(Json.Serialize(Model.Labels));
+    const votos = @Html.Raw(Json.Serialize(Model.Votos));
+
+    const cores = [
+        '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444',
+        '#06B6D4', '#EC4899', '#6366F1', '#14B8A6', '#F97316'
+    ];
+
     const ctx = document.getElementById('graficoEnquete').getContext('2d');
     const chart = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.Labels)),
+            labels: labels,
             datasets: [{
                 label: 'Votos',
-                data: @Html.Raw(Json.Serialize(Model.Votos)),
-                backgroundColor: [
-                    '#0d6efd', '#198754', '#dc3545', '#ffc107', '#6610f2',
-                    '#20c997', '#fd7e14', '#6c757d', '#e83e8c', '#0dcaf0'
-                ],
-                borderWidth: 1
+                data: votos,
+                backgroundColor: cores,
+                borderColor: '#FFFFFF',
+                borderWidth: 3,
+                hoverOffset: 15
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#1E293B',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
+                    padding: 12,
+                    borderColor: '#3B82F6',
+                    borderWidth: 1,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return ` ${context.parsed} votos (${percentage}%)`;
+                        }
+                    }
                 }
+            },
+            animation: {
+                animateRotate: true,
+                animateScale: true
             }
         }
+    });
+
+    // Calcular estatísticas
+    const totalVotos = votos.reduce((a, b) => a + b, 0);
+    const maxVotos = Math.max(...votos);
+    const indexMax = votos.indexOf(maxVotos);
+    const maxPercentual = ((maxVotos / totalVotos) * 100).toFixed(1);
+
+    document.getElementById('totalVotos').textContent = totalVotos;
+    document.getElementById('maisVotada').textContent = labels[indexMax] || '-';
+    document.getElementById('maiorPercentual').textContent = totalVotos > 0 ? maxPercentual + '%' : '0%';
+
+    // Criar legenda customizada
+    const legendContainer = document.getElementById('legendItems');
+    labels.forEach((label, index) => {
+        const percentage = totalVotos > 0 ? ((votos[index] / totalVotos) * 100).toFixed(1) : 0;
+
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+        item.innerHTML = `
+            <div class="legend-color" style="background-color: ${cores[index]}"></div>
+            <div class="legend-text">
+                <span>${label}</span>
+                <span class="legend-votes">${votos[index]} (${percentage}%)</span>
+            </div>
+        `;
+        legendContainer.appendChild(item);
     });
 </script>
