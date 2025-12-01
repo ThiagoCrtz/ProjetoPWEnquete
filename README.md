@@ -2,6 +2,7 @@ O ProjetoPWEnquete é uma aplicação web desenvolvida em ASP.NET MVC, criada pa
 O sistema conta com autenticação, CRUD completo de enquetes, votação única por usuário e exibição de resultados com gráficos interativos.
 
 🔹 Principais Funcionalidades
+
 ✅ Autenticação com Identity
 
 Login, registro, roles automáticas e usuário admin criado na inicialização.
